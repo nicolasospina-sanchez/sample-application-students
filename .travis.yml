@@ -1,5 +1,15 @@
-
 language: java
 
 script:
-- mvn clean verify
+  - mvn package -DskipTests
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t zerko/tp-cpe-travis:http-api-server sample-application-http-api-server
+  - docker build -t zerko/tp-cpe-travis:db-changelog sample-application-db-changelog-job
+  - mvn clean verify
+cache:
+  directories:
+  - $HOME/.m2
+
+services:
+  - docker
+
