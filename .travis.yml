@@ -1,7 +1,11 @@
 language: java
-
+addons:
+  sonarcloud:
+    organization: "nicolasospina-sanchez"
+    token:
+      secure: $SONARCLOUD_TOKEN # encrypted value of your token
 script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=nicolasospina-sanchez_sample-application-students
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t zerko/tp-cpe-travis:http-api-server sample-application-http-api-server
   - docker build -t zerko/tp-cpe-travis:db-changelog sample-application-db-changelog-job
@@ -11,8 +15,4 @@ cache:
 
 services:
   - docker
-addons:
-  sonarcloud:
-    organization: "nicolasospina-sanchez"
-    token:
-      secure: $SONARCLOUD_TOKEN # encrypted value of your token
+
